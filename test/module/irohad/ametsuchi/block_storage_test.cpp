@@ -129,15 +129,18 @@ TEST_F(BlStore_Test, WriteEmptyFolder) {
   ASSERT_FALSE(bl_store);
 }
 
-TEST_F(BlStore_Test, WriteThenReadSequential){
+TEST_F(BlStore_Test, WriteThenReadSequential) {
   auto s = BlockStorage::create(block_store_path);
-  if(s){
+  if (s) {
     auto bs = std::move(*s);
-    for(uint i=0x00; i<=0xff; i++){
+    for (uint i = 0x00; i <= 0xff; i++) {
       auto v = std::vector<uint8_t>(16, i);
+      auto last = bs->last_id();
       bs->add(i, v);
+      ASSERT_EQ(last + 1, bs->last_id());
+
       auto item = bs->get(i);
-      if(!item) {
+      if (!item) {
         FAIL() << "wrote item " << i << " then read empty";
       } else {
         ASSERT_EQ(*item, v);

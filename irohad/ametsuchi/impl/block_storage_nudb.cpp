@@ -65,6 +65,7 @@ namespace iroha {
         log_->error("BlockStorage::add(): {}", ec.message());
         return false;
       }
+      total_blocks_++;
       return true;
     }
 
